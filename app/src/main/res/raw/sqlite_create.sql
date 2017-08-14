@@ -1,0 +1,7 @@
+IF NOT EXISTS (SELECT * FROM SYSTEM_USER.TABLE WHERE IDENTITY = )
+CREATE TABLE Login (
+    id      INT PRIMARY KEY NOT NULL AUTOINCREMENT,
+    user    VARCHAR(9)  NULL,
+    fblogin VARCHAR(50) NULL, -- e-mail / telefone
+    pass    VARCHAR(15) NULL,
+);
