@@ -17,7 +17,7 @@ import nossafirma.com.br.meuapp.SplashScreenActivity;
 
 public class DBHelper extends SQLiteOpenHelper {
 
-    private static final String DB_NAME = "meubanco.db";
+    private static final String DB_NAME = "MeuApp.db";
     private static final int VERSAO_BANCO = 1;
     private Context context;
 
