@@ -1,4 +1,29 @@
 <resources>
-    <string name="app_name">MeuApp</string>
+
+    <string name="facebook_app_id">817081968459074</string>
+    <string name="fb_login_protocol_scheme">fb817081968459074</string>
+
+    <!-- General info-->
+    <string name="app_name">myApp</string>
     <string name="no_data">No data</string>
+
+
+    <!-- activity_login -->
+    <string name="username">your login</string>
+    <string name="password">your password</string>
+    <string name="keep_connected">Keep connected</string>
+    <string name="connect">Connect</string>
+    <string name="login_user">your user</string>
+    <string name="login_pass">your pass</string>
+    <string name="login_required_user">User required</string>
+    <string name="login_required_password">Password required</string>
+    <string name="login_invalid_user">Invalid user</string>
+    <string name="login_invalid_password">Invalid password</string>
+    <string name="or">OR</string>
+    <string name="title_activity_navigation_drawer">NavigationDrawerActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
 </resources>

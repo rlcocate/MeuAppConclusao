@@ -30,8 +30,9 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
 
         // Criação da estrutura do banco de dados.
-        readAndExecute(sqLiteDatabase, context, R.raw.sqlite_create);
-        saveLog("Banco criado!");
+        executeScript(sqLiteDatabase, context, R.raw.sqlite_create);
+        Toast.makeText(context, "Banco criado!", Toast.LENGTH_SHORT).show();
+        showLog("Banco criado!");
         // Inclusão de dados iniciais.
 //        readAndExecute(sqLiteDatabase, context, R.raw.insere_dados_iniciais);
 
@@ -43,26 +44,26 @@ public class DBHelper extends SQLiteOpenHelper {
         for (int i = older; i < newer; ++i) {
 
             String migrationFileName = String.format("from_%d_to_%d", i, (i + 1));
-            saveLog("Buscando pelo arquivo de migração: " + migrationFileName);
+            showLog("Buscando pelo arquivo de migração: " + migrationFileName);
 
             int migrationFileId = context.getResources()
                     .getIdentifier(migrationFileName, "raw", context.getPackageName());
-            saveLog("Arquivo encontrado ID: " + migrationFileId);
+            showLog("Arquivo encontrado ID: " + migrationFileId);
 
             if (migrationFileId != 0) {
 
-                saveLog("Executando arquivo...");
-                readAndExecute(sqLiteDatabase, context, migrationFileId);
+                showLog("Executando arquivo...");
+                executeScript(sqLiteDatabase, context, migrationFileId);
 
             } else {
-                saveLog("Arquivo de migração não encontrado!!");
+                showLog("Arquivo de migração não encontrado!!");
             }
 
         }
     }
 
     // Efetua leitura do script e se encontrar, pede execução.
-    private void readAndExecute(SQLiteDatabase db, Context ctx, Integer scriptFileId) {
+    private void executeScript(SQLiteDatabase db, Context ctx, Integer scriptFileId) {
 
         Resources res = ctx.getResources();
 
@@ -99,7 +100,7 @@ public class DBHelper extends SQLiteOpenHelper {
             // Verifica se é caracter fim da linha (;).
             if (line.endsWith(";")) {
                 String script = sb.toString();
-                saveLog("Executando script: " + script);
+                showLog("Executando script: " + script);
                 db.execSQL(script);
                 sb = new StringBuilder();
             }
@@ -108,7 +109,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     // Grava log.
-    private void saveLog(String msg) {
+    private void showLog(String msg) {
         Log.d(DBHelper.class.getSimpleName(), msg);
     }
 }

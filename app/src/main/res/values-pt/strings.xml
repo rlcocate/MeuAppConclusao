@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">meuApp</string>
+    <string name="connect">Conectar</string>
+    <string name="keep_connected">Manter conectado</string>
+    <string name="no_data">Sem dados</string>
+    <string name="password">sua senha</string>
+    <string name="username">seu login</string>
+    <string name="login_invalid_password">Usuário inválido</string>
+    <string name="login_invalid_user">Senha inválida</string>
+    <string name="login_pass">usuário</string>
+    <string name="login_user">senha</string>
+</resources>

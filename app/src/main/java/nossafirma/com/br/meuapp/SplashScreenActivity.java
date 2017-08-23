@@ -22,18 +22,18 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-
 public class SplashScreenActivity extends AppCompatActivity {
 
     private static int SPLASH_DISPLAY_LENGTH = 3000;
-//    private SharedPreferences sp;
+    private boolean loadedData = false;
+
     private String usuario;
     private String senha;
     private IRetrofitApi retrofitApi;
     private LoginAdapter loginAdapter;
-    boolean loadedData = false;
-//    LoginDAO loginDAO = null;
-    DBHelper dbHelper = null;
+    private SharedPreferences preferences = null;
+    private DBHelper dbHelper = null;
+
     public Context context = this;
 
     @Override
@@ -42,9 +42,12 @@ public class SplashScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash_screen);
 
         // Cria banco de dados.
-        //createDB();
+//        createDB();
 
+        // Carrega dados da Api.
         loadData();
+
+        // Carrega splash screen do app.
         loadSplash();
     }
 
@@ -63,11 +66,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-//                while (!loadedData){}
-//                Toast.makeText(SplashScreenActivity.this, "Usuário: " + usuario, Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                startActivity(intent);
+                startActivity(new Intent(SplashScreenActivity.this, LoginActivity.class).setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                 SplashScreenActivity.this.finish();
             }
         }, SPLASH_DISPLAY_LENGTH);
@@ -86,15 +85,8 @@ public class SplashScreenActivity extends AppCompatActivity {
                     // Retorno da WebApi.
                     Login login = response.body();
 
-                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.putString("defaultLogin", (login.getFblogin() == null ? login.getUsuario() : login.getFblogin()));
-                    editor.putString("defaultPass", login.getSenha());
-
-                    editor.commit();
-
-
-                    Log.d("login", String.valueOf(login));
+                    // Armazena valores padrão de login.
+                    createLoginDefaultValues(login);
                 }
 
                 loadedData = true;
@@ -107,6 +99,15 @@ public class SplashScreenActivity extends AppCompatActivity {
                 Toast.makeText(SplashScreenActivity.this, "Erro ao acessar servidor: " + t.getStackTrace().toString(), Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    private void createLoginDefaultValues(Login login){
+        preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("defaultLogin", (login.getFblogin() == null ? login.getUsuario() : login.getFblogin()));
+        editor.putString("defaultPass", login.getSenha());
+        editor.putBoolean("keepConnected", false);
+        editor.apply(); // Assíncrono
     }
 
     private void createDB() {
