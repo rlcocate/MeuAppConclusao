@@ -1,9 +1,12 @@
 package nossafirma.com.br.meuapp.sqlite;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.AsyncTask;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -19,16 +22,19 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "MeuApp.db";
     private static final int VERSAO_BANCO = 1;
+
     private Context context;
 
     public DBHelper(Context context) {
         super(context, DB_NAME, null, VERSAO_BANCO);
         this.context = context;
+        Toast.makeText(context, "Construtor", Toast.LENGTH_SHORT).show();
+
     }
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-
+        Toast.makeText(context, "onCreate", Toast.LENGTH_SHORT).show();
         // Criação da estrutura do banco de dados.
         executeScript(sqLiteDatabase, context, R.raw.sqlite_create);
         Toast.makeText(context, "Banco criado!", Toast.LENGTH_SHORT).show();

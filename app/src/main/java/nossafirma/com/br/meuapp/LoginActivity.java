@@ -43,8 +43,25 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // Obtem dados e define SPUtils.
         getDefaultLoginValues();
+
+        if (keepConnected) {
+
+            if (isValidLogin(defaultLogin.toString(), defaultPass.toString())) {
+
+                etUser.setText(defaultLogin);
+                etPass.setText(defaultPass);
+                cbKeepConnected.setChecked(keepConnected);
+
+                loadApp();
+
+                return;
+            }
+        }
+
+        etUser = (EditText) findViewById(R.id.etUser);
+        etPass = (EditText) findViewById(R.id.etPass);
+        cbKeepConnected = (CheckBox) findViewById(R.id.cbKeepConnected);
 
         callbackManager = CallbackManager.Factory.create();
         lbFacebook = (LoginButton) findViewById(R.id.lbFacebookLogin);
@@ -58,53 +75,19 @@ public class LoginActivity extends AppCompatActivity {
 
     public void signIn(View view) {
 
-        getDefaultLoginValues();
-
-        if (keepConnected) {
-            etUser.setText(defaultLogin);
-            etPass.setText(defaultPass);
-            cbKeepConnected.setChecked(keepConnected);
-        } else {
-
-            etUser = (EditText) findViewById(R.id.etUser);
-            etPass = (EditText) findViewById(R.id.etPass);
-            cbKeepConnected = (CheckBox) findViewById(R.id.cbKeepConnected);
-        }
-
         String user = etUser.getText().toString();// .getEditText().getText().toString();
         String pass = etPass.getText().toString(); // tilPass.getEditText().getText().toString();
 
-        if (user.equals("")) {
-            etUser.requestFocus();
-            Toast.makeText(this, R.string.login_required_user, Toast.LENGTH_LONG).show();
-            return;
+        if (isValidLogin(user,pass)) {
+
+            // Atualiza Shared Preferences
+            updateDefaultLoginValues(user, pass, cbKeepConnected.isChecked());
+
+            // Inserir registro na base.
+
+            // Carrega App.
+            loadApp();
         }
-
-        if (pass.equals("")) {
-            etPass.setFocusable(true);
-            Toast.makeText(this, R.string.login_required_password, Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        if (!defaultLogin.equals(user)) {
-            etUser.requestFocus();
-            Toast.makeText(this, R.string.login_invalid_user, Toast.LENGTH_LONG).show();
-            return;
-        } else {
-            if (!defaultPass.equals(pass)) {
-                etPass.requestFocus();
-                Toast.makeText(this, R.string.login_invalid_password, Toast.LENGTH_LONG).show();
-                return;
-            }
-        }
-
-        // Atualiza Shared Preferences
-        updateDefaultLoginValues(user, pass, cbKeepConnected.isChecked());
-
-        // Inserir registro na base.
-
-        // Carrega App.
-        loadApp();
     }
 
     public void facebookSignIn() {
@@ -126,6 +109,37 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public boolean isValidLogin(String user, String pass){
+
+        boolean valid = true;
+
+        if (user.equals("")) {
+            etUser.requestFocus();
+            Toast.makeText(this, R.string.login_required_user, Toast.LENGTH_LONG).show();
+            valid = false;
+        } else {
+            if (!defaultLogin.equals(user)) {
+                etUser.requestFocus();
+                Toast.makeText(this, R.string.login_invalid_user, Toast.LENGTH_LONG).show();
+                valid = false;
+            } else {
+                if (pass.equals("")) {
+                    etPass.setFocusable(true);
+                    Toast.makeText(this, R.string.login_required_password, Toast.LENGTH_LONG).show();
+                    valid = false;
+                } else {
+                    if (!defaultPass.equals(pass)) {
+                        etPass.requestFocus();
+                        Toast.makeText(this, R.string.login_invalid_password, Toast.LENGTH_LONG).show();
+                        valid = false;
+                    }
+                }
+            }
+        }
+
+        return valid;
     }
 
     public void loadApp() {

@@ -1,12 +1,13 @@
 package nossafirma.com.br.meuapp;
 
-import android.content.Context;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -34,18 +35,20 @@ public class SplashScreenActivity extends AppCompatActivity {
     private SharedPreferences preferences = null;
     private DBHelper dbHelper = null;
 
-    public Context context = this;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
-        // Cria banco de dados.
-//        createDB();
-
-        // Carrega dados da Api.
+       // Carrega dados da Api.
         loadData();
+
+        // Cria banco de dados.
+        dbHelper = new DBHelper(this);
+
+        // Sincronizando banco de dados.
+//        DBSync dbSync = new DBSync();
+//        dbSync.execute();
 
         // Carrega splash screen do app.
         loadSplash();
@@ -93,6 +96,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                 Toast.makeText(SplashScreenActivity.this, "Acesso efetuado e dados gravados com sucesso!", Toast.LENGTH_SHORT).show();
 
             }
+
             @Override
             public void onFailure(Call<Login> call, Throwable t) {
                 Log.i("ERRO", t.getStackTrace().toString());
@@ -101,8 +105,8 @@ public class SplashScreenActivity extends AppCompatActivity {
         });
     }
 
-    private void createLoginDefaultValues(Login login){
-        preferences = PreferenceManager.getDefaultSharedPreferences(context);
+    private void createLoginDefaultValues(Login login) {
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("defaultLogin", (login.getFblogin() == null ? login.getUsuario() : login.getFblogin()));
         editor.putString("defaultPass", login.getSenha());
@@ -110,7 +114,43 @@ public class SplashScreenActivity extends AppCompatActivity {
         editor.apply(); // Assíncrono
     }
 
-    private void createDB() {
-        dbHelper = new DBHelper(context);
+    private class DBSync extends AsyncTask<String, Void, String> {
+
+        private ProgressDialog progress;
+
+        @Override
+        protected void onPreExecute() {
+            progress = ProgressDialog.show(SplashScreenActivity.this, "Wait", "Accessing database...");
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            progress.dismiss();
+            if (s != null) {
+                try {
+
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+//                            loadSplash();
+                        }
+                    }, SPLASH_DISPLAY_LENGTH);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }
+
