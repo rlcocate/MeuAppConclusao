@@ -14,11 +14,14 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.util.List;
+
 import nossafirma.com.br.meuapp.adapter.LoginAdapter;
 import nossafirma.com.br.meuapp.api.IRetrofitApi;
 import nossafirma.com.br.meuapp.api.RetrofitClient;
 import nossafirma.com.br.meuapp.model.Login;
 import nossafirma.com.br.meuapp.sqlite.DBHelper;
+import nossafirma.com.br.meuapp.sqlite.LoginDAO;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -33,6 +36,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     private IRetrofitApi retrofitApi;
     private LoginAdapter loginAdapter;
     private SharedPreferences preferences = null;
+
     private DBHelper dbHelper = null;
 
     @Override
@@ -40,11 +44,11 @@ public class SplashScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
-       // Carrega dados da Api.
+        // Carrega dados da Api.
         loadData();
 
         // Cria banco de dados.
-        dbHelper = new DBHelper(this);
+        List<Login> logins = new LoginDAO(this).getAll();
 
         // Sincronizando banco de dados.
 //        DBSync dbSync = new DBSync();
@@ -93,64 +97,65 @@ public class SplashScreenActivity extends AppCompatActivity {
                 }
 
                 loadedData = true;
-                Toast.makeText(SplashScreenActivity.this, "Acesso efetuado e dados gravados com sucesso!", Toast.LENGTH_SHORT).show();
 
             }
 
             @Override
             public void onFailure(Call<Login> call, Throwable t) {
                 Log.i("ERRO", t.getStackTrace().toString());
-                Toast.makeText(SplashScreenActivity.this, "Erro ao acessar servidor: " + t.getStackTrace().toString(), Toast.LENGTH_LONG).show();
+                Toast.makeText(SplashScreenActivity.this, "Api Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
 
     private void createLoginDefaultValues(Login login) {
+
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("defaultLogin", (login.getFblogin() == null ? login.getUsuario() : login.getFblogin()));
         editor.putString("defaultPass", login.getSenha());
         editor.putBoolean("keepConnected", false);
-        editor.apply(); // Assíncrono
+//        editor.apply(); // Assíncrono
+        editor.commit(); // Síncrono
     }
 
-    private class DBSync extends AsyncTask<String, Void, String> {
-
-        private ProgressDialog progress;
-
-        @Override
-        protected void onPreExecute() {
-            progress = ProgressDialog.show(SplashScreenActivity.this, "Wait", "Accessing database...");
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-            try {
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            progress.dismiss();
-            if (s != null) {
-                try {
-
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-//                            loadSplash();
-                        }
-                    }, SPLASH_DISPLAY_LENGTH);
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
+//    private class DBSync extends AsyncTask<String, Void, String> {
+//
+//        private ProgressDialog progress;
+//
+//        @Override
+//        protected void onPreExecute() {
+//            progress = ProgressDialog.show(SplashScreenActivity.this, "Wait", "Accessing database...");
+//        }
+//
+//        @Override
+//        protected String doInBackground(String... params) {
+//            try {
+//
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//            return null;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String s) {
+//            progress.dismiss();
+//            if (s != null) {
+//                try {
+//
+//                    new Handler().postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+////                            loadSplash();
+//                        }
+//                    }, SPLASH_DISPLAY_LENGTH);
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
+//    }
 }
 

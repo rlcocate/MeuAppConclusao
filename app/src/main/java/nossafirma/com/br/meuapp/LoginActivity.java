@@ -20,11 +20,13 @@ import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
+import nossafirma.com.br.meuapp.model.Login;
+import nossafirma.com.br.meuapp.sqlite.LoginDAO;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private String defaultLogin;
-    private String defaultPass;
+    private String defaultLogin = "";
+    private String defaultPass = "";
     private Boolean keepConnected = false;
 
     private TextInputLayout tilUser;
@@ -33,6 +35,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText etPass;
     private CheckBox cbKeepConnected;
 
+    private Login data = null;
     private LoginButton lbFacebook;
     private CallbackManager callbackManager;
 
@@ -43,26 +46,22 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        // Obtem valores padrões de login para comparação.
         getDefaultLoginValues();
 
-        if (keepConnected) {
-
-            if (isValidLogin(defaultLogin.toString(), defaultPass.toString())) {
-
-                etUser.setText(defaultLogin);
-                etPass.setText(defaultPass);
-                cbKeepConnected.setChecked(keepConnected);
-
-                loadApp();
-
-                return;
-            }
-        }
-
+        // Popula campos da tela.
         etUser = (EditText) findViewById(R.id.etUser);
         etPass = (EditText) findViewById(R.id.etPass);
         cbKeepConnected = (CheckBox) findViewById(R.id.cbKeepConnected);
 
+        // Manter conectado.
+        if (keepConnected) {
+            etUser.setText(defaultLogin.toString());
+            etPass.setText(defaultPass.toString());
+            cbKeepConnected.setChecked(keepConnected);
+        }
+
+        // Facebook login.
         callbackManager = CallbackManager.Factory.create();
         lbFacebook = (LoginButton) findViewById(R.id.lbFacebookLogin);
 
@@ -75,15 +74,16 @@ public class LoginActivity extends AppCompatActivity {
 
     public void signIn(View view) {
 
-        String user = etUser.getText().toString();// .getEditText().getText().toString();
-        String pass = etPass.getText().toString(); // tilPass.getEditText().getText().toString();
+        String user = etUser.getText().toString();
+        String pass = etPass.getText().toString();
 
-        if (isValidLogin(user,pass)) {
+        if (isValidLogin(user, pass)) {
+
+            // Grava login.
+            saveLogin();
 
             // Atualiza Shared Preferences
             updateDefaultLoginValues(user, pass, cbKeepConnected.isChecked());
-
-            // Inserir registro na base.
 
             // Carrega App.
             loadApp();
@@ -108,29 +108,32 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(LoginActivity.this, error.getMessage().toString(), Toast.LENGTH_LONG).show();
             }
         });
-
     }
 
-    public boolean isValidLogin(String user, String pass){
+    public boolean isValidLogin(String user, String pass) {
 
         boolean valid = true;
 
         if (user.equals("")) {
+            etUser.setFocusableInTouchMode(true);
             etUser.requestFocus();
             Toast.makeText(this, R.string.login_required_user, Toast.LENGTH_LONG).show();
             valid = false;
         } else {
             if (!defaultLogin.equals(user)) {
+                etUser.setFocusableInTouchMode(true);
                 etUser.requestFocus();
                 Toast.makeText(this, R.string.login_invalid_user, Toast.LENGTH_LONG).show();
                 valid = false;
             } else {
                 if (pass.equals("")) {
-                    etPass.setFocusable(true);
+                    etPass.setFocusableInTouchMode(true);
+                    etPass.requestFocus();
                     Toast.makeText(this, R.string.login_required_password, Toast.LENGTH_LONG).show();
                     valid = false;
                 } else {
                     if (!defaultPass.equals(pass)) {
+                        etPass.setFocusableInTouchMode(true);
                         etPass.requestFocus();
                         Toast.makeText(this, R.string.login_invalid_password, Toast.LENGTH_LONG).show();
                         valid = false;
@@ -154,13 +157,25 @@ public class LoginActivity extends AppCompatActivity {
         keepConnected = preferences.getBoolean("keepConnected", false);
     }
 
-    private void updateDefaultLoginValues(String login, String pass, Boolean keepConnected) {
+    private void updateDefaultLoginValues(String user, String pass, Boolean keepConnected) {
         preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("defaultLogin", login);
-        editor.putString("defaultLogin", pass);
+        editor.putString("defaultLogin", user);
+        editor.putString("defaultPass", pass);
         editor.putBoolean("keepConnected", keepConnected);
         editor.apply(); // Assíncrono
+//        editor.commit(); // Síncrono
+    }
+
+    private void saveLogin() {
+        data = new Login();
+
+        data.setUsuario(defaultLogin);
+        data.setSenha(defaultPass);
+
+        LoginDAO db = new LoginDAO(this);
+
+        db.add(data);
     }
 
     @Override

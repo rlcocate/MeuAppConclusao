@@ -98,7 +98,6 @@ public class NavigationDrawerActivity extends AppCompatActivity
         } else if (id == R.id.nav_send) {
 
         } else if (id == R.id.nav_exit) {
-            updateDefaultLoginValues(null, null, false);
             startActivity(new Intent(NavigationDrawerActivity.this, LoginActivity.class));
             this.finish();
         }

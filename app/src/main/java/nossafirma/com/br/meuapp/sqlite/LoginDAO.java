@@ -24,6 +24,7 @@ public class LoginDAO {
 
     public LoginDAO(Context context) {
         dbHelper = new DBHelper(context);
+
     }
 
     public Login getBy(String usuario) {
@@ -39,39 +40,51 @@ public class LoginDAO {
                 null, null, null, null, null);
         login = null;
         if (cursor != null) {
-            cursor.moveToFirst();
-            login = new Login();
-            login.setUsuario(cursor.getString(cursor.getColumnIndex(COLUNA_USER)));
-            login.setFblogin(cursor.getString(cursor.getColumnIndex(COLUNA_FBLOGIN)));
-            login.setSenha(cursor.getString(cursor.getColumnIndex(COLUNA_PASS)));
+            if (cursor.getCount() > 0) {
+                cursor.moveToFirst();
+                login = new Login();
+                //TODO: Ajustar este código. Não está reconhecendo cursor.getString
+                login.setUsuario(cursor.getString(cursor.getColumnIndex(COLUNA_USER)));
+                login.setFblogin(cursor.getString(cursor.getColumnIndex(COLUNA_FBLOGIN)));
+                login.setSenha(cursor.getString(cursor.getColumnIndex(COLUNA_PASS)));
+            }
         }
         return login;
     }
 
-    public String add(Login login) {
+    public void add(Login login) {
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        ContentValues values = new ContentValues();
+        long resultado = 0;
 
-        values.put(COLUNA_USER, login.getUsuario());
-        if (login.getFblogin() != null) {
-            values.put(COLUNA_FBLOGIN, login.getFblogin());
-        } else {
-            values.put(COLUNA_PASS, login.getSenha());
+        if (getBy(login.getUsuario()) == null) {
+
+            ContentValues values = new ContentValues();
+
+            values.put(COLUNA_USER, login.getUsuario());
+            if (login.getFblogin() != null) {
+                values.put(COLUNA_FBLOGIN, login.getFblogin());
+            } else {
+                values.put(COLUNA_PASS, login.getSenha());
+            }
+
+            resultado = db.insert(TABELA_LOGIN, null, values);
+
+            db.close();
         }
 
-        long resultado = db.insert(TABELA_LOGIN, null, values);
-
-        db.close();
-
-        if (resultado == -1) {
-            return "Erro ao inserir registro...";
-        } else {
-            return "Gravação efetuada com sucesso!";
-        }
+//        if (resultado == 0) {
+//            return "Nothing";
+//        } else {
+//            if (resultado == -1) {
+//                return "Erro ao inserir registro...";
+//            } else {
+//                return "Gravação efetuada com sucesso!";
+//            }
+//        }
     }
 
-    public Login getAll() {
+    public List<Login> getAll() {
 
         List<Login> logins = new LinkedList<>();
         Login login = null;
@@ -92,7 +105,7 @@ public class LoginDAO {
                 logins.add(login);
             } while (cursor.moveToNext());
         }
-        return login;
+        return logins;
     }
 
 }
