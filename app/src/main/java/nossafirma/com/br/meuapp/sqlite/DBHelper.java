@@ -28,44 +28,13 @@ public class DBHelper extends SQLiteOpenHelper {
     public DBHelper(Context context) {
         super(context, DB_NAME, null, VERSAO_BANCO);
         this.context = context;
-        Toast.makeText(context, "Construtor", Toast.LENGTH_SHORT).show();
-
     }
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        Toast.makeText(context, "onCreate", Toast.LENGTH_SHORT).show();
         // Criação da estrutura do banco de dados.
         executeScript(sqLiteDatabase, context, R.raw.sqlite_create);
-        Toast.makeText(context, "Banco criado!", Toast.LENGTH_SHORT).show();
         showLog("Banco criado!");
-        // Inclusão de dados iniciais.
-//        readAndExecute(sqLiteDatabase, context, R.raw.insere_dados_iniciais);
-
-    }
-
-    @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int older, int newer) {
-
-        for (int i = older; i < newer; ++i) {
-
-            String migrationFileName = String.format("from_%d_to_%d", i, (i + 1));
-            showLog("Buscando pelo arquivo de migração: " + migrationFileName);
-
-            int migrationFileId = context.getResources()
-                    .getIdentifier(migrationFileName, "raw", context.getPackageName());
-            showLog("Arquivo encontrado ID: " + migrationFileId);
-
-            if (migrationFileId != 0) {
-
-                showLog("Executando arquivo...");
-                executeScript(sqLiteDatabase, context, migrationFileId);
-
-            } else {
-                showLog("Arquivo de migração não encontrado!!");
-            }
-
-        }
     }
 
     // Efetua leitura do script e se encontrar, pede execução.
@@ -109,6 +78,29 @@ public class DBHelper extends SQLiteOpenHelper {
                 showLog("Executando script: " + script);
                 db.execSQL(script);
                 sb = new StringBuilder();
+            }
+
+        }
+    }
+    @Override
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int older, int newer) {
+
+        for (int i = older; i < newer; ++i) {
+
+            String migrationFileName = String.format("from_%d_to_%d", i, (i + 1));
+            showLog("Buscando pelo arquivo de migração: " + migrationFileName);
+
+            int migrationFileId = context.getResources()
+                    .getIdentifier(migrationFileName, "raw", context.getPackageName());
+            showLog("Arquivo encontrado ID: " + migrationFileId);
+
+            if (migrationFileId != 0) {
+
+                showLog("Executando arquivo...");
+                executeScript(sqLiteDatabase, context, migrationFileId);
+
+            } else {
+                showLog("Arquivo de migração não encontrado!!");
             }
 
         }

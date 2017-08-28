@@ -26,4 +26,8 @@
 
     <string name="action_settings">Settings</string>
     <string name="title_activity_navigation_drawer" translatable="false">Menu</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="save">Save</string>
+    <string name="value">value</string>
 </resources>

@@ -1,11 +1,11 @@
 package nossafirma.com.br.meuapp;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,10 +16,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import nossafirma.com.br.meuapp.fragment.RegisterFragment;
+
 public class NavigationDrawerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private SharedPreferences preferences = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,24 +97,26 @@ public class NavigationDrawerActivity extends AppCompatActivity
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
+            Fragment fragment = null;
+            Class fragmentClass = null;
+
+            fragmentClass = RegisterFragment.class;
+            try {
+                fragment = (Fragment) fragmentClass.newInstance();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
 
         } else if (id == R.id.nav_exit) {
             startActivity(new Intent(NavigationDrawerActivity.this, LoginActivity.class));
             this.finish();
         }
 
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    private void updateDefaultLoginValues(String login, String pass, Boolean keepConnected) {
-        preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("defaultLogin", login);
-        editor.putString("defaultLogin", pass);
-        editor.putBoolean("keepConnected", keepConnected);
-        editor.apply(); // Assíncrono
     }
 }

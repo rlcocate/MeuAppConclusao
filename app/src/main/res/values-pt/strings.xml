@@ -6,14 +6,16 @@
     <string name="no_data">Sem dados</string>
     <string name="password">sua senha</string>
     <string name="username">seu login</string>
-    <string name="login_invalid_password">Usuário inválido</string>
-    <string name="login_invalid_user">Senha inválida</string>
+    <string name="login_invalid_user">Usuário inválido</string>
     <string name="login_user">usuário</string>
     <string name="action_settings">Configurações</string>
-    <string name="login_required_password">Senha é obrigatória</string>
-    <string name="login_required_user">Usuário é obrigatório</string>
+    <string name="login_required_password">Informe a senha</string>
+    <string name="login_required_user">Informe o usuário</string>
     <string name="login_pass">senha</string>
     <string name="navigation_drawer_close">Fechar menu</string>
     <string name="navigation_drawer_open">Abrir menu</string>
     <string name="or">OU</string>
+    <string name="save">Salvar</string>
+    <string name="value">valor</string>
+    <string name="login_invalid_password">Senha inválida</string>
 </resources>

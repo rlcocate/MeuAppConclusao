@@ -1,9 +1,7 @@
 package nossafirma.com.br.meuapp;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -31,12 +29,8 @@ public class SplashScreenActivity extends AppCompatActivity {
     private static int SPLASH_DISPLAY_LENGTH = 3000;
     private boolean loadedData = false;
 
-    private String usuario;
-    private String senha;
     private IRetrofitApi retrofitApi;
-    private LoginAdapter loginAdapter;
     private SharedPreferences preferences = null;
-
     private DBHelper dbHelper = null;
 
     @Override
@@ -49,6 +43,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         // Cria banco de dados.
         List<Login> logins = new LoginDAO(this).getAll();
+        Toast.makeText(this, "Criação completa do Banco!!", Toast.LENGTH_LONG).show();
 
         // Sincronizando banco de dados.
 //        DBSync dbSync = new DBSync();
@@ -119,43 +114,5 @@ public class SplashScreenActivity extends AppCompatActivity {
         editor.commit(); // Síncrono
     }
 
-//    private class DBSync extends AsyncTask<String, Void, String> {
-//
-//        private ProgressDialog progress;
-//
-//        @Override
-//        protected void onPreExecute() {
-//            progress = ProgressDialog.show(SplashScreenActivity.this, "Wait", "Accessing database...");
-//        }
-//
-//        @Override
-//        protected String doInBackground(String... params) {
-//            try {
-//
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//            return null;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(String s) {
-//            progress.dismiss();
-//            if (s != null) {
-//                try {
-//
-//                    new Handler().postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-////                            loadSplash();
-//                        }
-//                    }, SPLASH_DISPLAY_LENGTH);
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }
-//    }
 }
 

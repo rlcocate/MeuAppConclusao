@@ -120,7 +120,7 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(this, R.string.login_required_user, Toast.LENGTH_LONG).show();
             valid = false;
         } else {
-            if (!defaultLogin.equals(user)) {
+            if (!defaultLogin.equals(user.toLowerCase())) {
                 etUser.setFocusableInTouchMode(true);
                 etUser.requestFocus();
                 Toast.makeText(this, R.string.login_invalid_user, Toast.LENGTH_LONG).show();
@@ -132,7 +132,7 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(this, R.string.login_required_password, Toast.LENGTH_LONG).show();
                     valid = false;
                 } else {
-                    if (!defaultPass.equals(pass)) {
+                    if (!defaultPass.equals(pass.toLowerCase())) {
                         etPass.setFocusableInTouchMode(true);
                         etPass.requestFocus();
                         Toast.makeText(this, R.string.login_invalid_password, Toast.LENGTH_LONG).show();
