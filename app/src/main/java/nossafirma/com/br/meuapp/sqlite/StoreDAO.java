@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
+import android.widget.Toast;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -42,21 +43,21 @@ public class StoreDAO {
     public List<Store> getAll() {
 
         List<Store> stores = new LinkedList<>();
-        Store store = null;
+        Store store;
 
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String query = "SELECT id       = S.id," +
-                       "       name     = S.name," +
-                       "       regionId = S.regionId," +
-                       "       region   = R.name," +
-                       "       beerId   = S.beerId," +
-                       "       beer     = B.name," +
-                       "       value    = S.value," +
-                       "  FROM " + TABELA_STORE + " S " +
-                       " LEFT JOIN " + TABELA_REGION + " R ON (S." + COLUNA_REGION_ID + " = " + "R.id)" +
-                       " LEFT JOIN " + TABELA_BEER + "   B ON (S." + COLUNA_BEER_ID + "   = " + "B.id)";
 
-        Cursor cursor = db.rawQuery(query, null);
+        String query = "SELECT S.*, R.name as RegionName, B.name as BeerName " +
+                "  FROM " + TABELA_STORE + " as S " +
+                " LEFT OUTER JOIN " + TABELA_REGION + " as R ON (S." + COLUNA_REGION_ID + " = R.id)" +
+                " LEFT OUTER JOIN " + TABELA_BEER + "   as B ON (S." + COLUNA_BEER_ID + "   = B.id)";
+
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery(query, null);
+        } catch (Exception e) {
+            e.getMessage();
+        }
 
         if (cursor.moveToFirst()) {
             do {
@@ -102,22 +103,25 @@ public class StoreDAO {
         return store;
     }
 
-    public void add(Store store) {
+    public String save(Store store) {
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(COLUNA_NAME, store.getName());
+        values.put(COLUNA_REGION_ID, store.getRegion().getId());
+        values.put(COLUNA_BEER_ID, store.getRegion().getId());
+        values.put(COLUNA_VALUE, store.getValue());
+
+        long retRows;
 
         if (getBy(store.getName()) == null) {
-
-            ContentValues values = new ContentValues();
-
-            values.put(COLUNA_NAME, store.getName());
-            values.put(COLUNA_REGION_ID, store.getRegion().getId());
-            values.put(COLUNA_BEER_ID, store.getRegion().getId());
-            values.put(COLUNA_VALUE, store.getValue());
-
-            long resultado = db.insert(TABELA_STORE, null, values);
-
-            db.close();
+            retRows = db.insert(TABELA_STORE, null, values);
+        } else {
+            retRows = db.update(TABELA_STORE, values, COLUNA_ID + " = ?", new String[]{Integer.toString(store.getId())});
         }
+        db.close();
+
+        return (retRows > 0) ? "Sucess" : "Not saved";
     }
 }

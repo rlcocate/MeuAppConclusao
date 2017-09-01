@@ -72,7 +72,7 @@ public class LoginDAO {
         return login;
     }
 
-    public void add(Login login) {
+    public void insert(Login login) {
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 

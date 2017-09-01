@@ -7,7 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="nossafirma.com.br.meuapp.fragment.RegisterFragment">
+    tools:context="nossafirma.com.br.meuapp.fragment.AddStoreFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -69,14 +69,16 @@
                 android:id="@+id/etValue"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:layout_gravity="end"
                 android:hint="@string/value" />
 
         </android.support.design.widget.TextInputLayout>
 
         <Button
+            android:id="@+id/btSave"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="saveBeer"
             android:padding="@dimen/activity_horizontal_margin"
             android:text="@string/save"
             android:layout_gravity="right"/>

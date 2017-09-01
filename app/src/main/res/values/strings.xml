@@ -30,4 +30,6 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="save">Save</string>
     <string name="value">value</string>
+    <string name="stores">Stores</string>
+    <string name="add_a_store">Add a store</string>
 </resources>

@@ -36,7 +36,7 @@ CREATE TABLE Store (
     name        VARCHAR(30) NULL,   -- nome do estabelecimento
     regionId    INTEGER     NULL,   -- região
     beerId      INTEGER     NULL,   -- cerveja
-    value       DECIMAL     NULL,   -- valor
+    beerValue   DECIMAL     NULL,   -- valor
 
     FOREIGN KEY(regionId) REFERENCES Region (id),
     FOREIGN KEY(beerId) REFERENCES Beer (id)

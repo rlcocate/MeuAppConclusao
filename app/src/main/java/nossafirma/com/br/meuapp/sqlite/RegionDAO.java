@@ -79,7 +79,7 @@ public class RegionDAO {
         return region;
     }
 
-    public void add(Region region) {
+    public void insert(Region region) {
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 

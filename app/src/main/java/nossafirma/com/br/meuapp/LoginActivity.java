@@ -77,6 +77,9 @@ public class LoginActivity extends AppCompatActivity {
         String user = etUser.getText().toString();
         String pass = etPass.getText().toString();
 
+//        etUser.setText("android");
+//        etPass.setText("mobile");
+
         if (isValidLogin(user, pass)) {
 
             // Grava login.
@@ -175,7 +178,7 @@ public class LoginActivity extends AppCompatActivity {
 
         LoginDAO db = new LoginDAO(this);
 
-        db.add(data);
+        db.insert(data);
     }
 
     @Override

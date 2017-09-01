@@ -8,6 +8,18 @@ public class Store {
     private Beer beer;
     private Double value;
 
+    public Store(){}
+
+    public Store(Integer id, String name,
+                 Region region, Beer beer,
+                 Double value){
+        this.setId(id);
+        this.setName(name);
+        this.setRegion(region);
+        this.setBeer(beer);
+        this.setValue(value);
+    }
+
     public Integer getId() {
         return id;
     }
