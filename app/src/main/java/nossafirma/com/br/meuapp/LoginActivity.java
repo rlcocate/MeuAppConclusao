@@ -49,7 +49,7 @@ public class LoginActivity extends AppCompatActivity {
         // Obtem valores padrões de login para comparação.
         getDefaultLoginValues();
 
-        // Popula campos da tela.
+        // Obtem valores dos campos.
         etUser = (EditText) findViewById(R.id.etUser);
         etPass = (EditText) findViewById(R.id.etPass);
         cbKeepConnected = (CheckBox) findViewById(R.id.cbKeepConnected);

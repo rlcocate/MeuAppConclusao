@@ -32,4 +32,8 @@
     <string name="value">value</string>
     <string name="stores">Stores</string>
     <string name="add_a_store">Add a store</string>
+    <string name="store_name">Store Name</string>
+    <string name="region_name">Region</string>
+    <string name="beer_name">Beer Name</string>
+    <string name="beer_value">Value</string>
 </resources>

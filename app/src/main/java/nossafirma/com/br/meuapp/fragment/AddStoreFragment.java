@@ -94,7 +94,7 @@ public class AddStoreFragment extends Fragment {
         store.setName(etStoreName.getText().toString());
         store.setRegion((Region)spRegions.getSelectedItem());
         store.setBeer((Beer)spBeers.getSelectedItem());
-        store.setValue(Double.valueOf(etValue.getText().toString()));
+        store.setBeerValue(Double.valueOf(etValue.getText().toString()));
 
         String message = storeDao.save(store);
 

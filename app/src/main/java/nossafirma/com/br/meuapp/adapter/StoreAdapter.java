@@ -27,16 +27,17 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreViewHol
     public class StoreViewHolder extends RecyclerView.ViewHolder {
 
         public TextView storeName;
-        public Spinner regions;
-        public Spinner beers;
-        public TextView value;
+        public TextView regionName;
+        public TextView beerName;
+        public TextView beerValue;
+
 
         public StoreViewHolder(View view) {
             super(view);
-            storeName = (TextView) view.findViewById(R.id.etStoreName);
-            regions = (Spinner) view.findViewById(R.id.spRegions);
-            beers = (Spinner) view.findViewById(R.id.spBeers);
-            value = (TextView) view.findViewById(R.id.etValue);
+            storeName = (TextView) view.findViewById(R.id.tvStoreName);
+            regionName = (TextView) view.findViewById(R.id.tvRegionName);
+            beerName = (TextView) view.findViewById(R.id.tvBeerName);
+            beerValue = (TextView) view.findViewById(R.id.tvValue);
         }
     }
 
@@ -47,7 +48,7 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreViewHol
 
     @Override
     public StoreViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(_context).inflate(R.layout.fragment_list_stores, parent, false);
+        View view = LayoutInflater.from(_context).inflate(R.layout.fragment_list_stores_row, parent, false);
         return new StoreViewHolder(view);
     }
 
@@ -55,10 +56,10 @@ public class StoreAdapter extends RecyclerView.Adapter<StoreAdapter.StoreViewHol
     public void onBindViewHolder(StoreViewHolder viewHolder, int position) {
         Store store = this._stores.get(position);
 
-// Erro aconteceu aqui.
         viewHolder.storeName.setText(store.getName());
-        viewHolder.value.setText(store.getValue().toString());
-
+        viewHolder.regionName.setText(store.getRegion().getName());
+        viewHolder.beerName.setText(store.getBeer().getName());
+        viewHolder.beerValue.setText(store.getBeerValue().toString());
     }
 
     @Override

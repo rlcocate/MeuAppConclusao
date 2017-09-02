@@ -6,7 +6,7 @@ public class Store {
     private String name;
     private Region region;
     private Beer beer;
-    private Double value;
+    private Double beerValue;
 
     public Store(){}
 
@@ -17,7 +17,7 @@ public class Store {
         this.setName(name);
         this.setRegion(region);
         this.setBeer(beer);
-        this.setValue(value);
+        this.setBeerValue(value);
     }
 
     public Integer getId() {
@@ -52,11 +52,11 @@ public class Store {
         this.beer = beer;
     }
 
-    public Double getValue() {
-        return value;
+    public Double getBeerValue() {
+        return beerValue;
     }
 
-    public void setValue(Double value) {
-        this.value = value;
+    public void setBeerValue(Double value) {
+        this.beerValue = value;
     }
 }

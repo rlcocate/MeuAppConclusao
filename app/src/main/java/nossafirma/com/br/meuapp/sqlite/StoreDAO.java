@@ -30,7 +30,7 @@ public class StoreDAO {
     public static final String COLUNA_NAME = "name";
     public static final String COLUNA_REGION_ID = "regionId";
     public static final String COLUNA_BEER_ID = "beerId";
-    public static final String COLUNA_VALUE = "value";
+    public static final String COLUNA_VALUE = "beerValue";
 
     public StoreDAO(Context context) {
         dbHelper = new DBHelper(context);
@@ -66,7 +66,7 @@ public class StoreDAO {
                 store.setName(cursor.getString(cursor.getColumnIndex(COLUNA_NAME)));
                 store.setRegion(new Region(cursor.getInt(3), null, cursor.getString(4)));
                 store.setBeer(new Beer(cursor.getInt(5), cursor.getString(6)));
-                store.setValue(cursor.getDouble(cursor.getColumnIndex(COLUNA_VALUE)));
+                store.setBeerValue(cursor.getDouble(cursor.getColumnIndex(COLUNA_VALUE)));
                 stores.add(store);
             } while (cursor.moveToNext());
         }
@@ -86,8 +86,12 @@ public class StoreDAO {
         };
 
         String where = "name = '" + name + "'";
-        Cursor cursor = db
-                .query(true, TABELA_STORE, colunas, where, null, null, null, null, null);
+        Cursor cursor = null;
+    try {
+        cursor = db.query(true, TABELA_STORE, colunas, where, null, null, null, null, null);
+    } catch (Exception e){
+        e.getMessage();
+    }
         store = null;
         if (cursor != null) {
             if (cursor.getCount() > 0) {
@@ -97,7 +101,7 @@ public class StoreDAO {
                 store.setName(cursor.getString(cursor.getColumnIndex(COLUNA_NAME)));
                 store.setRegion(null);
                 store.setBeer(null);
-                store.setValue(cursor.getDouble(cursor.getColumnIndex(COLUNA_VALUE)));
+                store.setBeerValue(cursor.getDouble(cursor.getColumnIndex(COLUNA_VALUE)));
             }
         }
         return store;
@@ -111,9 +115,9 @@ public class StoreDAO {
         values.put(COLUNA_NAME, store.getName());
         values.put(COLUNA_REGION_ID, store.getRegion().getId());
         values.put(COLUNA_BEER_ID, store.getRegion().getId());
-        values.put(COLUNA_VALUE, store.getValue());
+        values.put(COLUNA_VALUE, store.getBeerValue());
 
-        long retRows;
+        long retRows = 0;
 
         if (getBy(store.getName()) == null) {
             retRows = db.insert(TABELA_STORE, null, values);
